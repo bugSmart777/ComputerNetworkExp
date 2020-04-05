@@ -1,22 +1,17 @@
-.PHONY: clean
-#all: UDPClient UDPServer TCPClient TCPServer
-all: TCPClient TCPServer
+src = $(wildcard *.cc)
+obj = $(patsubst %.cc, %.o, $(src))
 
-#UDPClient: UDPClient.cc
-#	g++  UDPClient.cc -o UDPClient -Wall -g
+all: TCPServer TCPClient
 
-#UDPServer: UDPServer.cc
-#	g++  UDPServer.cc -o UDPServer -Wall -g
-	
-TCPClient: TCPClient.cc
-	g++  TCPClient.cc -o TCPClient -Wall -g
+TCPServer: TCPServer.o global.o
+	g++ TCPServer.o global.o -o TCPServer -Wall
+TCPClient: TCPClient.o global.o
+	g++ TCPClient.o global.o -o TCPClient -Wall
 
-TCPServer: TCPServer.cc
-	g++  TCPServer.cc -o TCPServer -Wall -g
+%.o:%.cc
+	g++ -c $< -Wall
 
+.PHONY: clean all
+clean: 
+	-rm -rf TCPServer TCPClient $(obj)
 
-clean:
-	rm -rf TCPClient
-	rm -rf TCPServer
-	rm -rf UDPClient
-	rm -rf UDPServer
